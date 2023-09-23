@@ -1,0 +1,27 @@
+<launch>
+  <param name="/use_sim_time" value="false" /> 
+
+  <arg name="load_state_filename" default="/home/f1tenth/f1tenth_ws/maps/map.pbstream"/>
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find cartographer_ros)/configuration_files
+          -configuration_basename jet2_loc.lua
+          -load_state_filename $(arg load_state_filename)"
+      output="screen">
+
+    <remap from="scan" to="/AR1_lidar/scan" />
+    <remap from="odom" to="/AR1/odom/sample" />
+    <remap from="imu" to="/AR1/imu" />
+  </node>
+
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.01" />
+
+  <!-- <node name="rviz" pkg="rviz" type="rviz" required="true"
+      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" /> -->
+
+  <node pkg="tf" type="static_transform_publisher" name="transform_base_link_to_t265" args="0 0 0 0 0 0 AR1_pose_frame AR1_base_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="transform_map_to_world" args="0 0 0 0 0 0 map AR1_odom_frame 100" />
+
+</launch>

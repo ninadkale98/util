@@ -1,0 +1,4 @@
+<launch>
+
+<node pkg="rosservice" type="rosservice" name="write_state" args="call --wait /write_state '{filename: '/home/f1tenth/f1tenth_ws/maps/map.pbstream', include_unfinished_submaps: 'true'}' " />
+</launch>
